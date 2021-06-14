@@ -1,0 +1,17 @@
+# anytime you use docker you should have super user permission, that's what we do below
+# telling travis we will require docker 
+# series of commnad to execute before our tests run
+# conatains a group of scripts/commands to run that tells how to run tests suite to travis.
+
+sudo: required 
+
+language: generic
+
+services:
+  - docker
+
+before_install:
+  - docker build -t docker-react -f Dockerfile.dev .
+
+script:
+  - docker run docker-react npm run test -- --coverage

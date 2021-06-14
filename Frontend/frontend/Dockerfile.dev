@@ -1,0 +1,13 @@
+FROM node:alpine
+
+WORKDIR '/app'
+
+COPY package.json .
+RUN npm install
+
+# The below line can be removed if you are using the volume option either via docker cli 
+# or through docker-compose, since in that case it is automatically referring/falling back
+# to local files and folder. Otherwise, you need the below instruction
+COPY . .
+
+CMD ["npm", "start"]
