@@ -1,0 +1,23 @@
+sudo: required
+
+services:
+  - docker
+
+before_install:
+  - docker built -t multi-container-react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true multi-container-react-test npm run test
+
+after_success:
+  - docker built -t dockeramgupta04/multi-container-client ./client
+  - docker built -t dockeramgupta04/multi-container-server ./server
+  - docker built -t dockeramgupta04/multi-container-worker ./worker
+  - docker built -t dockeramgupta04/multi-container-nginx ./nginx
+  # Login to the docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # Push these images to docker hub
+  - docker push dockeramgupta04/multi-container-client
+  - docker push dockeramgupta04/multi-container-server
+  - docker push dockeramgupta04/multi-container-worker
+  - docker push dockeramgupta04/multi-container-nginx
